@@ -6,7 +6,8 @@ export const fetchUsers = createAsyncThunk(
     const response = await fetch(url, {
       method: "GET",
     });
-    return response.json();
+    const responseJson = await response.json();
+    return { response: responseJson, url };
   },
 );
 
@@ -17,6 +18,7 @@ const userSlice = createSlice({
     next: null,
     previous: null,
     count: 0,
+    page: 1,
     status: "",
     error: null,
   },
@@ -28,11 +30,14 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.status = "fullfilled";
-        const { next, results, count, previous } = action.payload;
+        const { response, url } = action.payload;
+        const { next, results, count, previous } = response;
         state.data = results;
         state.previous = previous;
         state.next = next;
         state.count = count;
+        state.page =
+          url === "https://swapi.dev/api/people" ? 1 : url.split("=")[1];
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = "rejected";
