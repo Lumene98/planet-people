@@ -5,6 +5,7 @@ import GridCell from "./GridCell";
 import GridRow from "./GridRow";
 import GridHeader from "./GridHeader";
 import { useMemo } from "react";
+import PlanetLink from "./PlanetLink";
 
 const UserGrid = () => {
   const dispatch = useDispatch();
@@ -64,11 +65,17 @@ const UserGrid = () => {
               return (
                 <GridRow key={key}>
                   <GridCell>{user.name}</GridCell>
-                  <GridCell>{user.height}</GridCell>
-                  <GridCell>{user.mass}</GridCell>
-                  <GridCell>{user.created}</GridCell>
-                  <GridCell>{user.edited}</GridCell>
-                  <GridCell>{user.homeworld}</GridCell>
+                  <GridCell>{user.height} cm</GridCell>
+                  <GridCell>{user.mass} kg</GridCell>
+                  <GridCell>
+                    {new Date(user.created).toISOString().split("T")[0]}
+                  </GridCell>
+                  <GridCell>
+                    {new Date(user.edited).toISOString().split("T")[0]}
+                  </GridCell>
+                  <GridCell>
+                    <PlanetLink planetUrl={user.homeworld}></PlanetLink>
+                  </GridCell>
                 </GridRow>
               );
             })}
