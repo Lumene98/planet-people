@@ -6,6 +6,11 @@ import GridRow from "./GridRow";
 import GridHeader from "./GridHeader";
 import { useMemo } from "react";
 import PlanetLink from "./PlanetLink";
+import { useState } from "react";
+import Input from "./Input";
+import { useCallback } from "react";
+import { resetPage } from "../features/userSlice";
+import SkeletonRow from "./SkeletonRows";
 
 const UserGrid = () => {
   const dispatch = useDispatch();
@@ -19,45 +24,61 @@ const UserGrid = () => {
     page,
   } = useSelector((state) => state.user);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const fetchUsersCallback = useCallback(
+    (page) => {
+      dispatch(fetchUsers({ search: searchQuery, page }));
+    },
+    [searchQuery, dispatch],
+  );
+
   const userNumber = useMemo(() => {
-    console.log(page, users.length);
     if (page === 1) {
       return users.length;
     }
     return (page - 1) * 10 + users.length;
   }, [page, users.length]);
 
+  const handleSearch = (e) => {
+    dispatch(resetPage());
+    setSearchQuery(e.target.value);
+  };
+
   const handleNext = () => {
     if (next) {
-      dispatch(fetchUsers(next));
+      fetchUsersCallback(page + 1);
     }
   };
 
   const handlePrevious = () => {
     if (previous) {
-      dispatch(fetchUsers(previous));
+      fetchUsersCallback(page - 1);
     }
   };
 
   useEffect(() => {
-    if (status === "") {
-      dispatch(fetchUsers());
-    }
-  }, [status, dispatch]);
+    fetchUsersCallback(1);
+  }, []);
+
+  useEffect(() => {
+    fetchUsersCallback(page);
+  }, [searchQuery, page]);
 
   if (status === "rejected") {
     return <div>Error: {error}</div>;
   }
 
-  console.log(users);
-
   return (
     <div>
+      <Input
+        placeholder={"Query by name"}
+        value={searchQuery}
+        onChange={handleSearch}
+      />
       <div className="grid min-h-[352px] content-start">
         {status === "pending" ? (
-          <div className="h-[352px]">
-            <div>Loading...</div>{" "}
-          </div>
+          <SkeletonRow size={11} />
         ) : (
           <>
             <GridHeader />
@@ -93,14 +114,14 @@ const UserGrid = () => {
         <button
           className="text-gray-300 min-h-9 rounded-md py-2 px-3 bg-black disabled:opacity-50"
           onClick={handlePrevious}
-          disabled={!previous}
+          disabled={!previous | (status === "pending")}
         >
           Previous
         </button>
         <button
           className="text-gray-300 min-h-9 rounded-md py-2 px-3 bg-black disabled:opacity-50"
           onClick={handleNext}
-          disabled={!next}
+          disabled={!next | (status === "pending")}
         >
           Next
         </button>

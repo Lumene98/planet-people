@@ -1,8 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const SEARCH_ENDPOINT = "https://swapi.dev/api/people/?search=";
+
+const PEOPLE_ENDPOINT = "https://swapi.dev/api/people";
+
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
-  async (url = "https://swapi.dev/api/people") => {
+  async ({ search = "", page }) => {
+    let url = "";
+    if (search) {
+      url = `${SEARCH_ENDPOINT}${search}&page=${page}`;
+    } else {
+      url = `${PEOPLE_ENDPOINT}?page=${page}`;
+    }
+
     const response = await fetch(url, {
       method: "GET",
     });
@@ -21,8 +32,13 @@ const userSlice = createSlice({
     page: 1,
     status: "",
     error: null,
+    search: "",
   },
-  reducers: {},
+  reducers: {
+    resetPage: (state) => {
+      state.page = 1;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -36,8 +52,7 @@ const userSlice = createSlice({
         state.previous = previous;
         state.next = next;
         state.count = count;
-        state.page =
-          url === "https://swapi.dev/api/people" ? 1 : url.split("=")[1];
+        state.page = Number(url.split("page=")[1]);
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = "rejected";
@@ -46,4 +61,5 @@ const userSlice = createSlice({
   },
 });
 
+export const { resetPage } = userSlice.actions;
 export default userSlice.reducer;
