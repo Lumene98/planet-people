@@ -71,7 +71,7 @@ const UserGrid = () => {
   }
 
   return (
-    <div className="pt-2">
+    <div className="pt-2 mx-4">
       <h1 className="text-2xl font-bold mb-4">Star Wars Characters</h1>
       <Outlet></Outlet>
       <Input
@@ -90,11 +90,11 @@ const UserGrid = () => {
                 <GridRow key={key}>
                   <GridCell>{user.name}</GridCell>
                   <GridCell>{user.height} cm</GridCell>
-                  <GridCell>{user.mass} kg</GridCell>
-                  <GridCell>
+                  <GridCell hideInMobile>{user.mass} kg</GridCell>
+                  <GridCell hideInMobile>
                     {new Date(user.created).toISOString().split("T")[0]}
                   </GridCell>
-                  <GridCell>
+                  <GridCell hideInMobile>
                     {new Date(user.edited).toISOString().split("T")[0]}
                   </GridCell>
                   <GridCell>
@@ -106,7 +106,7 @@ const UserGrid = () => {
           </>
         )}
       </div>
-      <div className="flex justify-end mt-2 spacing gap-2 items-center">
+      <div className="flex justify-center md:justify-end mt-2 spacing gap-2 items-center">
         {users.length > 0 && (
           <div className="text-gray-700">
             {userNumber} of {count} results

@@ -10,13 +10,13 @@ const GridHeader = () => {
       <GridCell>
         <strong>Height</strong>
       </GridCell>
-      <GridCell>
+      <GridCell hideInMobile>
         <strong>Mass</strong>
       </GridCell>
-      <GridCell>
+      <GridCell hideInMobile>
         <strong>Created</strong>
       </GridCell>
-      <GridCell>
+      <GridCell hideInMobile>
         <strong>Edited</strong>
       </GridCell>
       <GridCell>
