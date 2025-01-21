@@ -11,6 +11,7 @@ import Input from "./Input";
 import { useCallback } from "react";
 import { resetPage } from "../features/userSlice";
 import SkeletonRow from "./SkeletonRows";
+import { Outlet } from "react-router-dom";
 
 const UserGrid = () => {
   const dispatch = useDispatch();
@@ -72,6 +73,7 @@ const UserGrid = () => {
   return (
     <div className="pt-2">
       <h1 className="text-2xl font-bold mb-4">Star Wars Characters</h1>
+      <Outlet></Outlet>
       <Input
         placeholder={"Query by name"}
         value={searchQuery}
@@ -104,7 +106,6 @@ const UserGrid = () => {
           </>
         )}
       </div>
-
       <div className="flex justify-end mt-2 spacing gap-2 items-center">
         {users.length > 0 && (
           <div className="text-gray-700">

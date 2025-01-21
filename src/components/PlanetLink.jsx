@@ -1,9 +1,16 @@
+import { Link } from "react-router-dom";
+
 const PlanetLink = ({ planetUrl }) => {
+  const planetId = planetUrl?.split("/").filter(Boolean).pop();
+
   return (
-    <a className="h-6 flex flex-row flex-nowrap gap-[13px] items-center rounded-md py-1 px-3 bg-black hover:opacity-50 text-white justify-around cursor-pointer">
-      <span className="flex-1">{planetUrl.split("/")[5]}</span>
-      <span className="before:absolute before:content-['|'] before:top-[calc(50%-1px)] before:left-[-9px] before:translate-y-[-50%] relative flex flex-row flex-nowrap items-center gap-1 text-sm">
-        See more
+    <Link
+      className="h-6 flex flex-row flex-nowrap gap-[13px] items-center rounded-md py-1 px-3 bg-black hover:opacity-50 text-white justify-around cursor-pointer"
+      to={`planet/${planetId}`}
+    >
+      <span className="flex-1">{planetId}</span>
+      <span className="flex flex-row flex-nowrap items-center gap-1 text-sm">
+        <span className="hidden sm:block">See more</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -19,7 +26,7 @@ const PlanetLink = ({ planetUrl }) => {
           ></path>
         </svg>
       </span>
-    </a>
+    </Link>
   );
 };
 
